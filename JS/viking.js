@@ -161,35 +161,62 @@ class War {
     }
 }
 
-document.getElementById("warStartb").onclick = event =>{
-    let thisWar = new War;
+let thisWar = new War;// must be declared outside of the functio for us to access it after the function has worked on it.
+                      // if redeclared in the function it will always be an "empty war"; array length zero for both armies -Ry
+
+document.getElementById("warStartb").onclick = function () {
+       
+    startWar();
+}
+
+
+function startWar (){ // adjusted function so that it has a name and can be called like above. We dont' have to do it like this but I 
+                      // it might be help be eaiser to know what this fucntion does at a glance if we gave it a name. -Ry
+  
+
+    // let thisWar = new War;
+  
+    if (thisWar.saxonArmy.length === 5 && thisWar.vikingArmy.length === 5) {// added an if statment which checks the length to see if the war has already started.
+        alert("the war has already started");                               // we also could just have the button disappear but this might be simpler if it isn't 
+                                                                            // required that we remove the "start the war!!" button -Ry
+        
+        
+    }
+ 
+    else {
+
     for (let i=1; i<=5; i++){
     /*Add 5 vikings*/
+   
+
+    //on click of a button that could be called "add viking" and respectivly "add saxon" is when the 
     let htmlString = `
     <image class='tImage' src="./img/viking.png"></image>
     <div id="viking${i}" class="tStatus">
-        <strong>Name:</strong><span class="npcName"></span>                    
+        <strong>Name:</strong><span class="npcName"></span>                  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
-    </div>`
+    </div>`;  // needs to 
     let newRow = document.createElement("div");
     newRow.classList.add("npc");
     newRow.innerHTML = htmlString;
     document.getElementById(`vikingArmy`).appendChild(newRow);
 
-    /*Add 5 Saxon*/
+    /*Add 5 Saxon*/  // Removed "Name:" label in htmlString for Saxon and added "Saxon" per line 24 of README.md instructions - Ry
     htmlString = `
     <image class='tImage' src="./img/saxon.png"></image>
     <div id="saxon${i}" class="tStatus">
-        <strong>Name:</strong><span class="npcName"></span>  
+        <strong>Saxon ${i}</strong><span class="npcName"></span>  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
-    </div>`
+    </div>`; // I added ${i} with a space after "Saxon"; this adds a  1-5 to the saxon name depending on its index; Saxon 1, Saxon 2 etc... The reason
+    //I did this is because when we have to update the status after each attack (or each turn since after the attack the turn ends) we will be able to distingued to
+    //the player which Saxon was attacked since they don't have have a name and and the directions are that they should simply be labeled "Saxon" -Ry
     newRow = document.createElement("div");
     newRow.classList.add("npc");
     newRow.innerHTML = htmlString;
     document.getElementById(`saxonArmy`).appendChild(newRow);
-
+  
 
     thisWar.addViking(i);
 
@@ -197,12 +224,26 @@ document.getElementById("warStartb").onclick = event =>{
         document.querySelector(`#viking${i} .npcName`).innerText = thisWar.vikingArmy[i-1].name;
         document.querySelector(`#viking${i} .npcHealth`).innerText = thisWar.vikingArmy[i-1].health;
         document.querySelector(`#viking${i} .npcStr`).innerText = thisWar.vikingArmy[i-1].strength;
-    thisWar.addSaxon(i);
+        thisWar.addSaxon(i);
         document.querySelector(`#saxon${i} .npcHealth`).innerText = thisWar.saxonArmy[i-1].health;
         document.querySelector(`#saxon${i} .npcStr`).innerText = thisWar.saxonArmy[i-1].strength
-
-    console.log(thisWar.vikingArmy)
-
+    
     }
 }
+    console.log(thisWar)
+    console.log(thisWar.vikingArmy)
+    return thisWar;
+    
+
+
+    }
+
+//4th Iteration note.
+//Per line 41 of README.md: "status of war should update after each turn"; each time an attack is made. 
+//It could be showStatus(); and I think it partly is but, also I think it is supposed to be showing the 
+//messages being reuturned from the "receivedDamage()" methods of the viking and saxon class depnding on which
+//is attacking since these messages are returned after each attack.
+// -Ry 
+
+
 
