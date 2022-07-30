@@ -17,9 +17,10 @@ class Soldier {
 
 // Viking
 class Viking extends Soldier {
-        constructor(name, health, strength) {
+        constructor(name, nameID, health, strength) {
         super(health, strength);
         this.name = name;
+        this.nameID = nameID;
         }
     receiveDamage = function (dmg) {
         this.health -= dmg;
@@ -80,7 +81,8 @@ class War {
         let vHealth = Math.floor(Math.random() * 190) + 60;
         let vStrength = Math.floor(Math.random() * 145) + 5;
         let vName = vikingNames[Math.floor(Math.random() * 93)]
-        this.vikingArmy.push(new Viking(vName, vHealth, vStrength));
+        let vNameID = `viking${i}`
+        this.vikingArmy.push(new Viking(vName, vNameID, vHealth, vStrength));
     };
     addSaxon(i) {
         let vHealth = Math.floor(Math.random() * 80) + 80;
@@ -96,11 +98,16 @@ class War {
 
     if(randomSaxon.health<=0){
     document.querySelector(`#${randomSaxon.name} .tImage`).src ='./img/deadnpc.png';
+    document.querySelector(`#${randomSaxon.name} .npcHealth`).innerText = 'DEAD'
+    document.querySelector(`#${randomSaxon.name} .npcStr`).innerText = 'DEAD'
     this.saxonArmy.splice(randomSaxonIndex, 1);
-      //console.log(randomSaxon.name)
+    return [randomViking.name, randomSaxon.name, result]
+    } else {    
+    document.querySelector(`#${randomSaxon.name} .npcHealth`).innerText = result
+    return [randomViking.name, randomSaxon.name, result]
     }
-    return [randomSaxon.name, result]
     }
+
     saxonAttack() {
     let randomSaxonIndex = Math.floor(Math.random() * this.saxonArmy.length);
     let randomSaxon = this.saxonArmy[randomSaxonIndex];
@@ -108,10 +115,16 @@ class War {
     let randomViking = this.vikingArmy[randomVikingIndex];
     let result = randomViking.receiveDamage(randomSaxon.strength);
     if(randomViking.health<=0){
-      this.vikingArmy.splice(randomVikingIndex);
+        document.querySelector(`#${randomViking.nameID} .tImage`).src ='./img/deadnpc.png';
+        document.querySelector(`#${randomViking.nameID} .npcHealth`).innerText = 'DEAD'
+        document.querySelector(`#${randomViking.nameID} .npcStr`).innerText = 'DEAD'
+      this.vikingArmy.splice(randomVikingIndex, 1);
+      return [randomSaxon.name, randomViking.name, result]
+    } else {
+        document.querySelector(`#${randomViking.nameID} .npcHealth`).innerText = result
+    return [randomSaxon.name, randomViking.name, result]
     }
-    return result;
-    }
+}
     showStatus() {
         if(this.saxonArmy.length === 0){
             return `Vikings have won the war of the century!`
@@ -134,6 +147,11 @@ document.getElementById("warStartb").onclick = function () {
 document.getElementById("buttonViking").onclick = function () {
        
     vikingAttackbtn()
+}
+
+document.getElementById("buttonSaxon").onclick = function () {
+       
+    saxonAttackbtn()
 }
 
 
@@ -202,10 +220,26 @@ function startWar (){ // adjusted function so that it has a name and can be call
 
     function vikingAttackbtn(){
     let x = thisWar.vikingAttack();
-    console.log(x)
-
+    document.getElementById("buttonViking").style.display = 'none'
+    document.getElementById("buttonSaxon").style.display = 'block'
+    if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.lenght === 0){
+        alert(thisWar.showStatus())
+        document.getElementById("buttonViking").style.display = 'none'
+        document.getElementById("buttonSaxon").style.display = 'none'
+    }
     }
 
+
+    function saxonAttackbtn(){
+        let x = thisWar.saxonAttack();
+        document.getElementById("buttonViking").style.display = 'block'
+        document.getElementById("buttonSaxon").style.display = 'none'   
+        if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.lenght === 0){
+            alert(thisWar.showStatus())
+            document.getElementById("buttonViking").style.display = 'none'
+            document.getElementById("buttonSaxon").style.display = 'none'
+        } 
+        }
 //4th Iteration note.
 //Per line 41 of README.md: "status of war should update after each turn"; each time an attack is made. 
 //It could be showStatus(); and I think it partly is but, also I think it is supposed to be showing the 
