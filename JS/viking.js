@@ -23,11 +23,12 @@ class Viking extends Soldier {
         }
     receiveDamage = function (dmg) {
         this.health -= dmg;
-        if (this.health > 0){
-            return `${this.name} has received ${dmg} points of damage`
-        } else {
-            return `${this.name} has died in act of combat`
-        }
+        return this.health
+        // if (this.health > 0){
+        //     return `${this.name} has received ${dmg} points of damage`
+        // } else {
+        //     return `${this.name} has died in act of combat`
+        // }
     }
     battleCry = function() {
         return `Odin Owns You All!`
@@ -42,12 +43,13 @@ class Saxon extends Soldier {
         }
         receiveDamage = function (dmg) {
            this.health -= dmg;
-           if (this.health > 0){
-               return `A Saxon has received ${dmg} points of damage`
-           } else {
-               return `A Saxon has died in combat`
-           }
-       }
+           return this.health;
+    //        if (this.health > 0){
+    //            return `A Saxon has received ${dmg} points of damage`
+    //        } else {
+    //            return `A Saxon has died in combat`
+    //        }
+        }
 }
 
 let vHealth = 0;
@@ -69,49 +71,6 @@ let vikingNames = [
     'Tywin','Willem','Alek','Zac','Alec','Laz','Alejandro','Ryan'
 ]
 
-// let vikingArmy = [];
-// for (let i=1; i<=5; i++){
-// vHealth = Math.floor(Math.random() * 190) + 60;
-// vStrength = Math.floor(Math.random() * 145) + 5;
-// vName = vikingNames[Math.floor(Math.random() * 93)]
-// vikingArmy.push(new Viking(vName, vHealth, vStrength));
-// document.querySelector(`#viking${i} .npcName`).innerText = vikingArmy[i-1].name;
-// document.querySelector(`#viking${i} .npcHealth`).innerText = vikingArmy[i-1].health;
-// document.querySelector(`#viking${i} .npcStr`).innerText = vikingArmy[i-1].strength;
-// }
-
-// for (let i=0; i<=4; i++){
-// document.querySelector(`#viking${i+1} .npcName`).innerText = vikingArmy[i].name;
-// }
-
-// let saxonArmy = [];
-// for (let i=1; i<=5; i++){
-// vHealth = Math.floor(Math.random() * 80) + 80;
-// vStrength = Math.floor(Math.random() * 50) + 20;
-// saxonArmy.push(new Saxon(`Saxon${i}`, vHealth, vStrength))
-// document.querySelector(`#saxon${i} .npcHealth`).innerText = saxonArmy[i-1].health;
-// document.querySelector(`#saxon${i} .npcStr`).innerText = saxonArmy[i-1].strength;
-// }
-// // console.log(vikingArmy)
-// console.log(saxonArmy)
-// //console.log(vikingArmy[2].name)
-
-
-
-// // War
-// class War {
-//     vikingArmy = [];
-//     saxonArmy = [];
-//      addViking = function (addV){
-//         this.vikingArmy.push(new Viking(addV.name, addV.health, addV.strength));
-//      }
-//     addSaxon= function (addS){
-//         this.saxonArmy.push(new Saxon(addS.health, addS.strength));
-//      }
-//     // vikingAttack()
-//     // saxonAttack()
-//     // showStatus()
-// }
 
 
 class War {
@@ -126,7 +85,7 @@ class War {
     addSaxon(i) {
         let vHealth = Math.floor(Math.random() * 80) + 80;
         let vStrength = Math.floor(Math.random() * 50) + 20;
-        this.saxonArmy.push(new Saxon(`Saxon${i}`, vHealth, vStrength))
+        this.saxonArmy.push(new Saxon(`saxon${i}`, vHealth, vStrength))
     };
     vikingAttack() {
     let randomSaxonIndex = Math.floor(Math.random() * this.saxonArmy.length);
@@ -134,10 +93,13 @@ class War {
     let randomVikingIndex = Math.floor(Math.random() * this.vikingArmy.length);
     let randomViking = this.vikingArmy[randomVikingIndex];
     let result = randomSaxon.receiveDamage(randomViking.strength);
+
     if(randomSaxon.health<=0){
-      this.saxonArmy.splice(randomSaxonIndex, 1);
+    document.querySelector(`#${randomSaxon.name} .tImage`).src ='./img/deadnpc.png';
+    this.saxonArmy.splice(randomSaxonIndex, 1);
+      //console.log(randomSaxon.name)
     }
-    return result;
+    return [randomSaxon.name, result]
     }
     saxonAttack() {
     let randomSaxonIndex = Math.floor(Math.random() * this.saxonArmy.length);
@@ -169,21 +131,23 @@ document.getElementById("warStartb").onclick = function () {
     startWar();
 }
 
+document.getElementById("buttonViking").onclick = function () {
+       
+    vikingAttackbtn()
+}
+
 
 function startWar (){ // adjusted function so that it has a name and can be called like above. We dont' have to do it like this but I 
                       // it might be help be eaiser to know what this fucntion does at a glance if we gave it a name. -Ry
   
 
     // let thisWar = new War;
+    document.getElementById("warStartb").style.display = 'none'
+    document.getElementById("buttonViking").style.display = 'block'
+    document.getElementById("buttonSaxon").style.display = 'block'
+    document.querySelector(`.versus`).style.display = 'flex'
+
   
-    if (thisWar.saxonArmy.length === 5 && thisWar.vikingArmy.length === 5) {// added an if statment which checks the length to see if the war has already started.
-        alert("the war has already started");                               // we also could just have the button disappear but this might be simpler if it isn't 
-                                                                            // required that we remove the "start the war!!" button -Ry
-        
-        
-    }
- 
-    else {
 
     for (let i=1; i<=5; i++){
     /*Add 5 vikings*/
@@ -191,8 +155,8 @@ function startWar (){ // adjusted function so that it has a name and can be call
 
     //on click of a button that could be called "add viking" and respectivly "add saxon" is when the 
     let htmlString = `
-    <image class='tImage' src="./img/viking.png"></image>
     <div id="viking${i}" class="tStatus">
+        <image class='tImage' src="./img/viking.png"></image>
         <strong>Name:</strong><span class="npcName"></span>                  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
@@ -204,8 +168,8 @@ function startWar (){ // adjusted function so that it has a name and can be call
 
     /*Add 5 Saxon*/  // Removed "Name:" label in htmlString for Saxon and added "Saxon" per line 24 of README.md instructions - Ry
     htmlString = `
-    <image class='tImage' src="./img/saxon.png"></image>
     <div id="saxon${i}" class="tStatus">
+        <image class='tImage' src="./img/saxon.png"></image>
         <strong>Saxon ${i}</strong><span class="npcName"></span>  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
@@ -227,14 +191,18 @@ function startWar (){ // adjusted function so that it has a name and can be call
         thisWar.addSaxon(i);
         document.querySelector(`#saxon${i} .npcHealth`).innerText = thisWar.saxonArmy[i-1].health;
         document.querySelector(`#saxon${i} .npcStr`).innerText = thisWar.saxonArmy[i-1].strength
-    
-    }
+
+
 }
     console.log(thisWar)
     console.log(thisWar.vikingArmy)
     return thisWar;
     
+    }
 
+    function vikingAttackbtn(){
+    let x = thisWar.vikingAttack();
+    console.log(x)
 
     }
 
