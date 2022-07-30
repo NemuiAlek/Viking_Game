@@ -1,3 +1,29 @@
+/*BUTTON COMMANDS*/
+document.getElementById("warStartb").onclick = function () {
+       
+    startWar();
+}
+
+document.getElementById("buttonViking").onclick = function () {
+       
+    vikingAttackbtn()
+}
+
+document.getElementById("buttonSaxon").onclick = function () {
+       
+    saxonAttackbtn()
+}
+
+document.getElementById("formStart").onclick = function () {
+       
+    startForm()
+}
+
+document.getElementById("warStartbf").onclick = function () {
+       
+    startWarForm()
+}
+/*END BUTTON COMMANDS*/
 
 // Soldier
 class Soldier {
@@ -77,17 +103,26 @@ let vikingNames = [
 class War {
     vikingArmy = [];
     saxonArmy = [];
-    addViking(i) {
-        let vHealth = Math.floor(Math.random() * 190) + 60;
-        let vStrength = Math.floor(Math.random() * 145) + 5;
-        let vName = vikingNames[Math.floor(Math.random() * 93)]
+    addViking(i,vName,vHealth,vStrength,inputType) {
+        if(inputType === 'Random'){
+        let rHealth = Math.floor(Math.random() * 190) + 60;
+        let rStrength = Math.floor(Math.random() * 145) + 5;
+        let rName = vikingNames[Math.floor(Math.random() * 93)]
+        let rNameID = `viking${i}`
+        this.vikingArmy.push(new Viking(rName, rNameID, rHealth, rStrength));
+        } else if (inputType === 'Form'){
         let vNameID = `viking${i}`
         this.vikingArmy.push(new Viking(vName, vNameID, vHealth, vStrength));
+        }
     };
-    addSaxon(i) {
-        let vHealth = Math.floor(Math.random() * 80) + 80;
-        let vStrength = Math.floor(Math.random() * 50) + 20;
+    addSaxon(i,vHealth,vStrength,inputType) {
+        if(inputType === 'Random'){
+        let rHealth = Math.floor(Math.random() * 80) + 200;
+        let rStrength = Math.floor(Math.random() * 50) + 25;
+        this.saxonArmy.push(new Saxon(`saxon${i}`, rHealth, rStrength))
+        } else if (inputType === 'Form'){
         this.saxonArmy.push(new Saxon(`saxon${i}`, vHealth, vStrength))
+        }
     };
     vikingAttack() {
     let randomSaxonIndex = Math.floor(Math.random() * this.saxonArmy.length);
@@ -139,74 +174,57 @@ class War {
 let thisWar = new War;// must be declared outside of the functio for us to access it after the function has worked on it.
                       // if redeclared in the function it will always be an "empty war"; array length zero for both armies -Ry
 
-document.getElementById("warStartb").onclick = function () {
-       
-    startWar();
-}
-
-document.getElementById("buttonViking").onclick = function () {
-       
-    vikingAttackbtn()
-}
-
-document.getElementById("buttonSaxon").onclick = function () {
-       
-    saxonAttackbtn()
-}
-
-
 function startWar (){ // adjusted function so that it has a name and can be called like above. We dont' have to do it like this but I 
                       // it might be help be eaiser to know what this fucntion does at a glance if we gave it a name. -Ry
   
 
     // let thisWar = new War;
     document.getElementById("warStartb").style.display = 'none'
+    document.getElementById("formStart").style.display = 'none'
     document.getElementById("buttonViking").style.display = 'block'
     document.getElementById("buttonSaxon").style.display = 'block'
     document.querySelector(`.versus`).style.display = 'flex'
+    document.querySelector(`#vikingArmy`).style.display = 'flex'
+    document.querySelector(`#saxonArmy`).style.display = 'flex'
+    document.getElementById("gameTitle").style.display = 'none'
 
   
 
     for (let i=1; i<=5; i++){
     /*Add 5 vikings*/
-   
-
-    //on click of a button that could be called "add viking" and respectivly "add saxon" is when the 
     let htmlString = `
     <div id="viking${i}" class="tStatus">
-        <image class='tImage' src="./img/viking.png"></image>
+        <image class='tImage' src="./img/viking2.png"></image>
         <strong>Name:</strong><span class="npcName"></span>                  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
-    </div>`;  // needs to 
+    </div>`; 
     let newRow = document.createElement("div");
     newRow.classList.add("npc");
     newRow.innerHTML = htmlString;
     document.getElementById(`vikingArmy`).appendChild(newRow);
 
-    /*Add 5 Saxon*/  // Removed "Name:" label in htmlString for Saxon and added "Saxon" per line 24 of README.md instructions - Ry
     htmlString = `
     <div id="saxon${i}" class="tStatus">
         <image class='tImage' src="./img/saxon.png"></image>
         <strong>Saxon ${i}</strong><span class="npcName"></span>  
         <strong>Health:</strong><span class="npcHealth"></span>
         <strong>Strength:</strong><span class="npcStr"></span>
-    </div>`; // I added ${i} with a space after "Saxon"; this adds a  1-5 to the saxon name depending on its index; Saxon 1, Saxon 2 etc... The reason
-    //I did this is because when we have to update the status after each attack (or each turn since after the attack the turn ends) we will be able to distingued to
-    //the player which Saxon was attacked since they don't have have a name and and the directions are that they should simply be labeled "Saxon" -Ry
+    </div>`;
     newRow = document.createElement("div");
     newRow.classList.add("npc");
     newRow.innerHTML = htmlString;
     document.getElementById(`saxonArmy`).appendChild(newRow);
   
 
-    thisWar.addViking(i);
+    thisWar.addViking(i,'','','','Random');
 
     
         document.querySelector(`#viking${i} .npcName`).innerText = thisWar.vikingArmy[i-1].name;
         document.querySelector(`#viking${i} .npcHealth`).innerText = thisWar.vikingArmy[i-1].health;
         document.querySelector(`#viking${i} .npcStr`).innerText = thisWar.vikingArmy[i-1].strength;
-        thisWar.addSaxon(i);
+        
+    thisWar.addSaxon(i,'','','Random');
         document.querySelector(`#saxon${i} .npcHealth`).innerText = thisWar.saxonArmy[i-1].health;
         document.querySelector(`#saxon${i} .npcStr`).innerText = thisWar.saxonArmy[i-1].strength
 
@@ -222,7 +240,7 @@ function startWar (){ // adjusted function so that it has a name and can be call
     let x = thisWar.vikingAttack();
     document.getElementById("buttonViking").style.display = 'none'
     document.getElementById("buttonSaxon").style.display = 'block'
-    if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.lenght === 0){
+    if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.length === 0){
         alert(thisWar.showStatus())
         document.getElementById("buttonViking").style.display = 'none'
         document.getElementById("buttonSaxon").style.display = 'none'
@@ -234,18 +252,133 @@ function startWar (){ // adjusted function so that it has a name and can be call
         let x = thisWar.saxonAttack();
         document.getElementById("buttonViking").style.display = 'block'
         document.getElementById("buttonSaxon").style.display = 'none'   
-        if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.lenght === 0){
+        if(thisWar.saxonArmy.length === 0 || thisWar.vikingArmy.length === 0){
             alert(thisWar.showStatus())
             document.getElementById("buttonViking").style.display = 'none'
             document.getElementById("buttonSaxon").style.display = 'none'
-        } 
         }
-//4th Iteration note.
-//Per line 41 of README.md: "status of war should update after each turn"; each time an attack is made. 
-//It could be showStatus(); and I think it partly is but, also I think it is supposed to be showing the 
-//messages being reuturned from the "receivedDamage()" methods of the viking and saxon class depnding on which
-//is attacking since these messages are returned after each attack.
-// -Ry 
+    }
+ 
+function startForm(){
+
+    document.getElementById("warStartb").style.display = 'none'
+    document.getElementById("formStart").style.display = 'none'
+    document.getElementById("warStartbf").style.display = 'block'
+    document.querySelector(`#vikingArmy`).style.display = 'flex'
+    document.querySelector(`#saxonArmy`).style.display = 'flex'
+
+    for (let i=1; i<=5; i++){
+        /*Add 5 vikings*/
+        let htmlString = `
+        <h2>Viking ${i}</h2>
+        <div class="inputData">
+            <label>Name</label>
+            <input type="text" class="npcName" value="${i}">
+        </div>
+        <div class="inputData">
+            <label>Health</label>
+            <input type="text" class="npcHealth" value="100">
+        </div>
+        <div class="inputData">
+            <label>Strenght</label>
+            <input type="text" class="npcStr" value="100">
+        </div>` 
+        let newRow = document.createElement("div");
+        newRow.setAttribute(`id`,`viking${i}`)
+        newRow.classList.add("inputHead");
+        newRow.innerHTML = htmlString;
+        document.getElementById(`vikingArmy`).appendChild(newRow);
+    
+        htmlString = `
+            <h2>Saxon ${i}</h2>
+            <div class="inputData">
+                <label>Name</label>
+                <input type="text" class="npcName" value="Saxon ${i}" readonly>
+            </div> 
+            <div class="inputData">
+                <label>Health</label>
+                <input type="text" class="npcHealth" value="100">
+            </div>
+            <div class="inputData">
+                <label>Strenght</label>
+                <input type="text" class="npcStr" value="100">
+            </div>`
+        newRow = document.createElement("div");
+        newRow.setAttribute(`id`,`saxon${i}`)
+        newRow.classList.add("inputHead");
+        newRow.innerHTML = htmlString;
+        document.getElementById(`saxonArmy`).appendChild(newRow);
+
+    }
+}
+
+function startWarForm(){
+    document.getElementById("warStartb").style.display = 'none'
+    document.getElementById("warStartbf").style.display = 'none'
+    document.getElementById("formStart").style.display = 'none'
+    document.getElementById("buttonViking").style.display = 'block'
+    document.getElementById("buttonSaxon").style.display = 'block'
+    document.querySelector(`.versus`).style.display = 'flex'
+    document.querySelector(`#vikingArmy`).style.display = 'flex'
+    document.querySelector(`#saxonArmy`).style.display = 'flex'
+    document.getElementById("gameTitle").style.display = 'none'
+
+    for (let i=1; i<=5; i++){
+
+        let vName = document.querySelector(`#viking${i} .npcName`).value;
+        let vHealth = document.querySelector(`#viking${i} .npcHealth`).value;
+        let vStr = document.querySelector(`#viking${i} .npcStr`).value;
+    
+        thisWar.addViking(i,vName,vHealth,vStr,'Form');
+
+        vHealth = document.querySelector(`#saxon${i} .npcHealth`).value;
+        vStr = document.querySelector(`#saxon${i} .npcStr`).value;
+        thisWar.addSaxon(i,vHealth,vStr,'Form');
+    }
+
+    document.getElementById(`vikingArmy`).innerHTML = "<h1>Viking Army</h1>"
+    document.getElementById(`saxonArmy`).innerHTML = "<h1>Saxon Army</h1>"
+
+    document
+
+    for (let i=1; i<=5; i++){
+    /*Add 5 vikings*/
+    let htmlString = `
+    <div id="viking${i}" class="tStatus">
+        <image class='tImage' src="./img/viking2.png"></image>
+        <strong>Name:</strong><span class="npcName"></span>                  
+        <strong>Health:</strong><span class="npcHealth"></span>
+        <strong>Strength:</strong><span class="npcStr"></span>
+    </div>`; 
+    let newRow = document.createElement("div");
+    newRow.classList.add("npc");
+    newRow.innerHTML = htmlString;
+    document.getElementById(`vikingArmy`).appendChild(newRow);
+
+    htmlString = `
+    <div id="saxon${i}" class="tStatus">
+        <image class='tImage' src="./img/saxon.png"></image>
+        <strong>Saxon ${i}</strong><span class="npcName"></span>  
+        <strong>Health:</strong><span class="npcHealth"></span>
+        <strong>Strength:</strong><span class="npcStr"></span>
+    </div>`;
+    newRow = document.createElement("div");
+    newRow.classList.add("npc");
+    newRow.innerHTML = htmlString;
+    document.getElementById(`saxonArmy`).appendChild(newRow);
+      
+        document.querySelector(`#viking${i} .npcName`).innerText = thisWar.vikingArmy[i-1].name;
+        document.querySelector(`#viking${i} .npcHealth`).innerText = thisWar.vikingArmy[i-1].health;
+        document.querySelector(`#viking${i} .npcStr`).innerText = thisWar.vikingArmy[i-1].strength;
+
+        document.querySelector(`#saxon${i} .npcHealth`).innerText = thisWar.saxonArmy[i-1].health;
+        document.querySelector(`#saxon${i} .npcStr`).innerText = thisWar.saxonArmy[i-1].strength
 
 
+}
 
+    console.log(thisWar)
+    console.log(thisWar.vikingArmy)
+    return thisWar;
+    
+    }

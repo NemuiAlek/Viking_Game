@@ -11,15 +11,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
+
+<div id="gameTitle">
+<div class="line1">VIKING VS SAXON</div>
+<div class="line2">Battle to the death!</div>
+</div>
 <div id="warStart">
-    <button id="warStartb">START THE WAR!!</button>
+    <button id="warStartb" class="warButton">START THE WAR!! (Random)</button>
+    <button id="formStart" class="warButton">START THE WAR!! (Input)</button>
 </div>
 <div>
     <p id ="war-status"></p> <!--While the battle is still going the text should be the default-->
 </div>
 
-    <div id="mainContent">
-        <div id="vikingArmy">
+<div id="mainContent">
+
+        
+        <div id="vikingArmy" style="display:none;">
+            <h1>Viking Army</h1>
         </div>
 
     <div class="button">
@@ -36,8 +45,13 @@
     </div>
 
 
-    <div id="saxonArmy">
+    <div id="saxonArmy" style="display:none;">
+        <h1>SaxonArmy</h1>
     </div>
+</div>
+<div id="warStartbfDiv">
+    <button id="warStartbf" class="warButton" style="display:none;">START THE WAR!!</button>
+</div> 
     <script src="../JS/viking.js"></script>
 </body>
 </html>

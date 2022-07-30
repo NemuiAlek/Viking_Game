@@ -40,6 +40,7 @@ html{
     justify-content: center;
     align-items: center;
     font-size: 10vw;
+    margin:15px
 }
 
 .button{
@@ -49,8 +50,9 @@ html{
 }
 
 .buttonText{
-   font-size: 3vw;
-   height: 8vw;
+   font-size: 45px;
+   height: 150px;
+   width: 280px;
    font-family: 'Cormorant SC', serif;
 }
 
@@ -63,11 +65,56 @@ html{
 
 #warStart{
     display: flex;
+    justify-content: space-evenly;
+}
+
+.warButton{
+    font-size: 30px;
+    height: 150px;
+    width: 400px;
+    font-family: 'Cormorant SC', serif;
+    white-space: normal;
+}
+
+.inputHead{
+    display: flex;
+    flex-flow: row;
+}
+
+.inputData{
+    display: flex;
+    flex-flow:column;
+    align-items: center;
+    margin: 8px;
+}
+
+input{
+text-align: center;
+}
+
+h1{
+    text-align: center;
+}
+
+#warStartbfDiv{
+    display: flex;
+    align-items: center;
     justify-content: center;
 }
 
-#warStartb{
-    font-size: 3vw;
-    height: 8vw;
-    font-family: 'Cormorant SC', serif;
+#gameTitle{
+    display: flex;
+    flex-flow:column;
+    align-items: center;
+    justify-content: center;
+    font-weight: bolder;
+}
+
+#gameTitle .line1{
+    font-size: 55px;
+}
+
+#gameTitle .line2{
+    font-size: 45px;
+    margin-bottom: 25px;
 }
